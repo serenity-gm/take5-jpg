@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Form Take 5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #eef0ee; --surface: #ffffff; --surface-2: #f4f5f3;
+        --ink: #191d20; --ink-2: #4c555d; --ink-3: #7c868e;
+        --line: #d8dcd8; --line-strong: #b9bfba;
+        --band: #1c2126; --band-ink: #f2f4f2; --stripe: #f5b301;
+        --ok: #1c7c43; --ok-bg: #e3f2e8;
+        --bad: #c22424; --bad-bg: #fbe9e7;
+        --warn: #b97a08; --warn-bg: #fdf0d3;
+        --wa: #1da851; --wa-dark: #157a3c; --focus: #2563eb;
+        --shadow: 0 1px 2px rgba(20,26,30,.08), 0 4px 14px rgba(20,26,30,.06);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121517; --surface: #1b1f23; --surface-2: #22272c;
+          --ink: #eceeed; --ink-2: #b3bcc2; --ink-3: #828d94;
+          --line: #31373d; --line-strong: #454e55;
+          --band: #0c0e10; --band-ink: #f2f4f2; --stripe: #f5b301;
+          --ok: #4cc47c; --ok-bg: #17301f;
+          --bad: #ff6d64; --bad-bg: #3a1a17;
+          --warn: #f0b93e; --warn-bg: #38300f;
+          --wa: #25c05e; --wa-dark: #1da851; --focus: #6ea8ff;
+          --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.3);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body { margin: 0; background: var(--bg); color: var(--ink);
+        font-family: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+        font-size: 16px; line-height: 1.45; padding-bottom: 118px; }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 0 12px; }
+      .band { background: var(--band); color: var(--band-ink); border-bottom: 5px solid var(--stripe); }
+      .band .wrap { padding-top: 18px; padding-bottom: 16px; position: relative; }
+      .band .dept { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11.5px;
+        letter-spacing: .14em; text-transform: uppercase; color: var(--stripe); margin: 0 0 4px; }
+      .band h1 { font-family: "Barlow Condensed", "Barlow", sans-serif; font-weight: 700;
+        font-size: clamp(30px, 7.4vw, 44px); line-height: 1.02; margin: 0; text-transform: uppercase; }
+      .band h1 .thin { font-weight: 500; color: #c9d1d6; }
+      .band .sub { margin: 6px 0 0; font-size: 14.5px; color: #c9d1d6; }
+      .langbar { position: absolute; top: 16px; right: 12px; display: flex; gap: 6px; }
+      .langbar button { border: 1px solid #454e55; background: #22272c; color: #c9d1d6;
+        border-radius: 999px; padding: 5px 11px; font-size: 13px; font-weight: 600; cursor: pointer; }
+      .langbar button.on { background: var(--stripe); border-color: var(--stripe); color: #191d20; }
+      .steps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+      .steps span { font-size: 12.5px; font-weight: 600; border: 1px solid #454e55; color: #dfe5e8;
+        border-radius: 999px; padding: 4px 10px; }
+      .steps b { color: var(--stripe); margin-right: 4px; }
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+        box-shadow: var(--shadow); margin-top: 14px; padding: 16px; }
+      .card h2 { font-family: "Barlow Condensed", "Barlow", sans-serif; font-size: 21px;
+        text-transform: uppercase; letter-spacing: .02em; margin: 0 0 4px; }
+      .card .hint { color: var(--ink-2); font-size: 14px; margin: 0 0 10px; }
+      label.f { display: block; font-weight: 600; font-size: 14px; margin: 12px 0 5px; }
+      label.f:first-of-type { margin-top: 2px; }
+      input[type="text"], input[type="datetime-local"], textarea {
+        width: 100%; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface);
+        color: var(--ink); padding: 10px 12px; font: inherit; font-size: 15.5px; }
+      textarea { resize: vertical; min-height: 44px; }
+      input:focus, textarea:focus { outline: 2px solid var(--focus); outline-offset: 0; border-color: var(--focus); }
+      .q { border-top: 1px solid var(--line); padding: 12px 0; }
+      .q:first-of-type { border-top: none; }
+      .q .qt { font-size: 15.5px; margin: 0 0 8px; }
+      .q .qt b { color: var(--ink-3); font-family: "IBM Plex Mono", monospace; font-size: 13px; margin-right: 6px; }
+      .seg { display: flex; gap: 6px; }
+      .seg button { flex: 1; padding: 9px 4px; border-radius: 8px; border: 1px solid var(--line-strong);
+        background: var(--surface-2); color: var(--ink-2); font: inherit; font-weight: 600; font-size: 14.5px; cursor: pointer; }
+      .seg button.sel-ya { background: var(--ok-bg); border-color: var(--ok); color: var(--ok); }
+      .seg button.sel-tidak { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+      .seg button.sel-na { background: var(--warn-bg); border-color: var(--warn); color: var(--warn); }
+      .haz { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+      @media (max-width: 520px) { .haz { grid-template-columns: 1fr; } }
+      .haz label { display: flex; gap: 8px; align-items: flex-start; border: 1px solid var(--line);
+        border-radius: 8px; padding: 9px 10px; font-size: 14.5px; cursor: pointer; background: var(--surface); }
+      .haz label.on { border-color: var(--focus); background: var(--surface-2); font-weight: 600; }
+      .haz input { margin-top: 3px; width: 17px; height: 17px; accent-color: var(--focus); flex: none; }
+      .banner { border-radius: 8px; padding: 11px 13px; font-weight: 600; font-size: 15px; margin-top: 12px; display: none; }
+      .banner.show { display: block; }
+      .banner.ok { background: var(--ok-bg); color: var(--ok); }
+      .banner.bad { background: var(--bad-bg); color: var(--bad); }
+      .trow { border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; margin-top: 9px; background: var(--surface-2); }
+      .trow .th { font-weight: 700; font-size: 15px; margin: 0 0 7px; }
+      .trow .grid { display: grid; grid-template-columns: 1fr 110px; gap: 7px; }
+      .trow .grid input:first-child { grid-column: 1 / -1; }
+      .addbtn { margin-top: 10px; border: 1px dashed var(--line-strong); background: none; color: var(--ink-2);
+        width: 100%; padding: 9px; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
+      .submitbar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface);
+        border-top: 1px solid var(--line); padding: 12px; box-shadow: 0 -4px 14px rgba(20,26,30,.08); }
+      .submitbar .inner { max-width: 760px; margin: 0 auto; }
+      #kirim { width: 100%; border: none; border-radius: 10px; background: var(--wa); color: #fff;
+        font: inherit; font-weight: 700; font-size: 17px; padding: 14px; cursor: pointer; }
+      #kirim:active { background: var(--wa-dark); }
+
+      .dlbtn { width: 100%; border: none; border-radius: 10px; background: var(--wa); color: #fff;
+        font: inherit; font-weight: 700; font-size: 16.5px; padding: 13px; cursor: pointer; margin-top: 6px; }
+      .dlbtn:active { background: var(--wa-dark); }
+      /* ===== filled sheet (paper form replica, front+back in one image) ===== */
+      #sheetWrap { position: absolute; left: -10000px; top: 0; }
+      #sheet { width: 794px; background: #fff; color: #111; padding: 30px 32px;
+        font-family: "Noto Sans CJK SC", "Noto Sans SC", sans-serif; font-size: 13px; line-height: 1.3; }
+      #sheet .s-title { font-family: Georgia, "Times New Roman", serif; font-style: italic; color: #666;
+        font-size: 15.5px; margin: 0; }
+      #sheet .s-title .lt { color: #999; }
+      #sheet .s-bar { height: 5px; background: #333; margin: 5px 0 12px; }
+      #sheet .s-steps { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+      #sheet .s-steps td { border: 1.1px solid #111; width: 20%; padding: 5px 6px; vertical-align: top; font-size: 12.5px; }
+      #sheet .s-steps .zh { font-size: 11.5px; }
+      #sheet .s-en { font-size: 10px; color: #444; }
+      #sheet .s-frow { display: flex; align-items: flex-end; gap: 7px; margin-top: 8px; }
+      #sheet .s-flab { font-weight: 700; white-space: nowrap; font-size: 12.5px; }
+      #sheet .s-flab .zh { font-weight: 400; }
+      #sheet .s-fline { flex: 1; border-bottom: 1px solid #111; min-height: 17px; padding: 0 4px;
+        font-weight: 700; font-size: 13.5px; }
+      #sheet table.s-q { width: 100%; border-collapse: collapse; margin-top: 8px; }
+      #sheet .s-q th, #sheet .s-q td { border: 0.8px solid #555; padding: 4.5px 6px; vertical-align: top; }
+      #sheet .s-q .hd { background: #222; color: #fff; font-size: 12.5px; text-align: left; }
+      #sheet .s-q .ah { background: #eee; text-align: center; font-size: 11.5px; width: 46px; }
+      #sheet .s-q .ac { width: 46px; text-align: center; background: #f4f4f4; font-size: 15px; font-weight: 700; }
+      #sheet .s-q .ac .y { color: #157347; } #sheet .s-q .ac .t { color: #c22424; } #sheet .s-q .ac .n { color: #666; }
+      #sheet .s-q .rule td { background: #fafafa; font-size: 11.5px; }
+      #sheet .s-band { background: #222; color: #fff; padding: 6px 9px; font-size: 12.5px; margin-top: 12px; }
+      #sheet table.s-haz { width: 100%; border-collapse: collapse; }
+      #sheet .s-haz td { border: 0.8px solid #555; width: 33.33%; padding: 4px 6px; vertical-align: top; font-size: 12px; }
+      #sheet .s-haz td.hl { background: #fff59d; font-weight: 700; }
+      #sheet .s-dbox { border: 1.2px solid #111; padding: 8px 11px; flex: 1; position: relative; font-size: 11.5px; }
+      #sheet .s-dbox .dt { font-weight: 700; font-size: 14.5px; }
+      #sheet .s-dbox.chosen { border: 3px solid #111; background: #f0f0f0; }
+      #sheet .s-dbox .bdg { position: absolute; top: 4px; right: 8px; font-size: 17px; font-weight: 700; }
+      #sheet table.s-free { width: 100%; border-collapse: collapse; margin-top: 12px; table-layout: fixed; }
+      #sheet .s-free th { background: #222; color: #fff; border: 0.8px solid #555; padding: 5px 7px; font-size: 12.5px; }
+      #sheet .s-free td { border: 0.8px solid #555; padding: 4px 7px; height: 34px; font-size: 12.5px; font-weight: 600; }
+      #sheet .s-cat { margin-top: 7px; font-size: 12px; }
+      #sheet .s-page2 { margin-top: 30px; border-top: 2px dashed #bbb; padding-top: 24px; }
+      .err { color: var(--bad); font-size: 14px; font-weight: 600; margin: 8px 2px 0; display: none; }
+      .rules { font-size: 13.5px; color: var(--ink-2); margin: 10px 0 0; padding-left: 18px; }
+    </style>
+  </head>
+  <body>
+    <header class="band">
+      <div class="wrap">
+        <div class="langbar">
+          <button type="button" id="lang-id">🇮🇩 ID</button>
+          <button type="button" id="lang-zh">🇨🇳 中文</button>
+        </div>
+        <p class="dept">Serenity International Mining · Safety</p>
+        <h1>Take <span class="thin">5</span></h1>
+        <p class="sub" data-i="sub">Take 5 menit untuk keselamatanmu — pikirkan tugasnya sebelum mulai.</p>
+        <div class="steps" id="steps"></div>
+      </div>
+    </header>
+    <main class="wrap">
+      <section class="card">
+        <h2 data-i="dataTitle">Data</h2>
+        <label class="f" data-i="fNama" for="nama">Nama</label>
+        <input type="text" id="nama" autocomplete="name" />
+        <label class="f" data-i="fLokasi" for="lokasi">Lokasi</label>
+        <input type="text" id="lokasi" />
+        <label class="f" data-i="fPekerjaan" for="pekerjaan">Deskripsi Pekerjaan</label>
+        <input type="text" id="pekerjaan" />
+        <label class="f" data-i="fWaktu" for="waktu">Tanggal / Jam</label>
+        <input type="datetime-local" id="waktu" />
+      </section>
+
+      <section class="card">
+        <h2 data-i="frontTitle">Apakah saya siap melakukan pekerjaan saya?</h2>
+        <p class="hint" data-i="frontHint">Jawab setiap pertanyaan: Ya, Tidak, atau N/A (tidak berlaku).</p>
+        <div id="front"></div>
+        <div class="banner" id="frontBanner"></div>
+        <ul class="rules">
+          <li data-i="ruleGreen">Semua hijau (All Green) — lanjutkan analisa di bagian belakang.</li>
+          <li data-i="ruleRed">Jika ada merah (Any Red) — bicaralah dengan Supervisor/Manajer Anda.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2 data-i="hazTitle">Identifikasi Bahaya</h2>
+        <p class="hint" data-i="hazHint">Sebelum memulai pekerjaan, tanyakan pada diri Anda: potensi bahaya apa yang Anda dan rekan kerja Anda hadapi? Centang semua yang ada.</p>
+        <div class="haz" id="haz"></div>
+      </section>
+
+      <section class="card">
+        <h2 data-i="riskTitle">Analisis Risiko</h2>
+        <div id="risk"></div>
+      </section>
+
+      <section class="card">
+        <h2 data-i="actTitle">Bahaya &amp; Tindakan Pencegahan</h2>
+        <p class="hint" data-i="actHint">Diisi hanya jika kamu menjawab Ya pada "Apakah ada risiko lain?" — untuk potensi bahaya yang belum tercantum di daftar bahaya di atas.</p>
+        <div id="actions"></div>
+        <button type="button" class="addbtn" id="addRow" data-i="addRow">+ Tambah bahaya lain</button>
+        <label class="f" data-i="fCatatan" for="catatan">Catatan (opsional)</label>
+        <textarea id="catatan" rows="2"></textarea>
+        <div class="banner" id="finalBanner"></div>
+      </section>
+      <section class="card" id="resultPanel" style="display:none">
+        <h2 data-i="dlTitle">Hasil Form</h2>
+        <button type="button" class="dlbtn" id="dlBtn">Download JPG</button>
+        <p class="hint" id="dlNote" style="margin-top:8px"></p>
+      </section>
+    </main>
+    <div class="submitbar">
+      <div class="inner">
+        <button type="button" id="kirim" data-i="kirim">Kirim via WhatsApp</button>
+        <p class="err" id="err"></p>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+      var WA_NUMBER = "6285217115363";
+      var SHEET = {"steps": [{"en": "Think about the Task", "id": "Pikirkan Tugasnya", "no": 1, "zh": "想任务"}, {"en": "Identify the Hazards", "id": "Identifikasi Bahaya", "no": 2, "zh": "危险识别"}, {"en": "Analyse the Risks", "id": "Analisa Resikonya", "no": 3, "zh": "风险分析"}, {"en": "Control the Risks", "id": "Control Resikonya", "no": 4, "zh": "控制风险"}, {"en": "Work Safely", "id": "Kerja Selamat", "no": 5, "zh": "安全工作"}], "frontSection": {"id": "APAKAH SAYA SIAP MELAKUKAN PEKERJAAN SAYA?", "zh": "我是否准备好开展工作?", "en": "AM I READY TO PERFORM MY TASK?"}, "front": [{"en": "Do I have a list of activity steps and know how to follow them?", "id": "Apakah saya memiliki daftar langkah-langkah aktivitas dan memahami cara mengerjakannya?", "no": 1, "zh": "我是否有工作步骤清单且知道如何执行他们?"}, {"en": "Have I read the risk analysis and preventive measures to be implemented?", "id": "Sudahkah saya membaca analisis risiko dan tindakan pencegahan yang akan diterapkan?", "no": 2, "zh": "我是否阅读过风险分析和要落实的预防措施?"}, {"en": "Am I trained and authorised to perform the task?", "id": "Apakah saya terlatih dan berwenang untuk melakukan pekerjaan tersebut?", "no": 3, "zh": "我是否接受过培训, 并被授权执行这项工作?"}, {"en": "Am I fit to do the task? Not fatigue, injured, dehydrated or taking any medications?", "id": "Apakah saya sehat untuk melakukan pekerjaan? Tidak kelelahan, cedera, mengalami dehidrasi atau sedang mengonsumsi obat-obatan?", "no": 4, "zh": "我的身体是否适合这项工作? 是否疲劳、受伤、脱水或服用任何药物?"}, {"en": "Do I have all necessary PPE available and in good condition?", "id": "Apakah saya memiliki semua APD yang diperlukan dan dalam kondisi baik?", "no": 5, "zh": "我是否有所需的 PPE 且状况良好?"}, {"en": "Do I have the right tools and equipment, are they tagged, tested and in good working condition?", "id": "Apakah saya memiliki peralatan dan perlengkapan yang tepat, apakah peralatan dan perlengkapan tersebut memiliki label, telah diuji, dan dalam kondisi yang baik?", "no": 6, "zh": "我是否有正确的工具和设备, 他们都被标记、测试且处于良好状况?"}, {"en": "Have I completed all pre start checks?", "id": "Apakah saya telah melakukan pengecekan dan pemeriksaan harian (P2H)?", "no": 7, "zh": "我是否已完成所有启动前检查?"}, {"en": "Are barriers and signs required for this task? If so, are correct signs and barriers in place and legible?", "id": "Apakah barikade dan papan informasi/petunjuk diperlukan untuk pekerjaan ini? Jika iya, apakah papan petunjuk dan barikade yang diperlukan untuk pekerjaan ini sudah terpasang dengan benar dan mudah dibaca?", "no": 8, "zh": "这项工作是否需要障碍物和标识? 如需, 正确的标识和所需的障碍物是否到位?"}, {"en": "Have all energy isolations (electrical, mechanical, services) been completed and been tested for dead? Do I have the personal lock/tag ready to use for this job?", "id": "Apakah semua isolasi energi (listrik, mekanik, servis) telah selesai dan telah dipastikan mati? Apakah saya memiliki kunci/tag personal (LOTO) yang siap digunakan untuk pekerjaan ini?", "no": 9, "zh": "是否所有能量 (电气、机械、检修) 都已隔断且进行测试? 我是否准备好此项工作使用的个人挂锁/标签?"}, {"en": "Is my work environment well maintained before I start? (Housekeeping)", "id": "Apakah lingkungan kerja saya dalam kondisi yang bersih dan terawat sebelum saya mulai bekerja? (Housekeeping)", "no": 10, "zh": "开始工作前, 我是否保持工作环境的整洁 (内务)?"}], "frontRules": ["Semua hijau (ALL GREEN) - Saya lanjutkan analisa di halaman bagian belakang / Proceed with the analysis on the back", "Jika ada merah? (Any RED) - Bicaralah dengan Supervisor/Manajer Anda / Talk to your Supervisor / Manager"], "backHeader": {"id": "Sebelum memulai pekerjaan Anda, tanyakan pada diri Anda potensi bahaya apa yang Anda dan rekan kerja Anda hadapi?", "zh": "危险识别 在开始工作前, 问问自己你和你的同事将面临哪些潜在危险", "en": "IDENTIFY HAZARDS. Before staring your task, ask yourself what potential hazards you and your colleagues are expose to?"}, "hazards": [{"en": "Hazardous Materials", "id": "Bahan Berbahaya dan beracun", "no": 1, "zh": "危险物质"}, {"en": "Fatigue", "id": "Kelelahan", "no": 2, "zh": "疲劳"}, {"en": "Overhead Power Lines", "id": "Bahaya tersangkut kabel listrik", "no": 3, "zh": "架空电线"}, {"en": "Stored Energy", "id": "Energi yang Tersimpan", "no": 4, "zh": "储存能源"}, {"en": "Hot Work", "id": "Pekerjaan Panas", "no": 5, "zh": "动火作业"}, {"en": "Electrical", "id": "Kelistrikan", "no": 6, "zh": "电气"}, {"en": "Ventilation", "id": "Sirkulasi Udara", "no": 7, "zh": "通风"}, {"en": "Environment/Spills", "id": "Lingkungan/Tumpahan", "no": 8, "zh": "环境/泄露"}, {"en": "Explosives/Misfires", "id": "Mudah meledak/Gagal meledak", "no": 9, "zh": "爆炸品/失火"}, {"en": "Manual Handling", "id": "Pengangkatan Manual", "no": 10, "zh": "人工搬运"}, {"en": "Moving parts/Machine Guarding", "id": "Alat bergerak/Pelindung mesin", "no": 11, "zh": "活动部件/机械防护"}, {"en": "Traffic flow and Pedestrian", "id": "Arus lalu lintas dan Pejalan kaki", "no": 12, "zh": "车流量与行人"}, {"en": "Weather Conditions", "id": "Kondisi Cuaca", "no": 13, "zh": "天气条件"}, {"en": "Pinch points", "id": "Bahaya Terjepit", "no": 14, "zh": "挤压点"}, {"en": "High Walls", "id": "Lereng yang tinggi", "no": 15, "zh": "高墙"}, {"en": "Communications", "id": "Komunikasi", "no": 16, "zh": "沟通"}, {"en": "Dropped/Falling objects", "id": "Kejatuhan/Benda jatuh", "no": 17, "zh": "高空坠物"}, {"en": "Dust/Noise", "id": "Debu/Kebisingan", "no": 18, "zh": "灰尘/噪音"}, {"en": "Vehicle/Mobile Plant", "id": "Kendaraan/Unit yang bergerak", "no": 19, "zh": "车辆/移动设备"}, {"en": "Confined Space", "id": "Ruang Terbatas", "no": 20, "zh": "受限空间"}, {"en": "Co-activity", "id": "Kegiatan bersama", "no": 21, "zh": "协调作业"}, {"en": "Ground Conditions", "id": "Kondisi tanah", "no": 22, "zh": "土壤条件"}, {"en": "Working at Heights", "id": "Bekerja diketinggian", "no": 23, "zh": "高空作业"}, {"en": "Slips/Trips", "id": "Tergelincir/Tersandung", "no": 24, "zh": "滑倒/绊倒"}], "riskSection": {"id": "Analisis Risiko", "zh": "风险分析", "en": "Risk Analysis"}, "risk": [{"en": "Am I in the \"line of fire\"? Can I be in contact between or with something?", "id": "Apakah saya berada di \"area berbahaya\"?", "no": 1, "zh": "我是否位于\"火线\"? 我会在某物之间或接触某物吗?"}, {"en": "Is the risk controlled?", "id": "Apakah risiko sudah terkontrol?", "no": 2, "zh": "风险是否得到控制?"}, {"en": "Are there other risks?", "id": "Apakah ada risiko lain?", "no": 3, "zh": "是否有其他风险?"}], "decision": [{"en": "All risks are controlled, I can do the job. Caution: Any inadequate control, I stop my work and re-assess. Report and resolve, I make no assumptions!", "type": "Work Safely"}, {"en": "There are some risks not controlled. I talk to my manager.", "type": "STOP"}], "freeCols": [{"en": "HAZARD", "id": "BAHAYA", "zh": "危险"}, {"en": "Preventive Measures", "id": "TINDAKAN PENCEGAHAN", "zh": "预防措施"}, {"en": "Risk Score", "id": "Nilai Risiko", "zh": "风险评分"}], "title": "Take 5", "titleEn": "Take 5 minutes for your Safety - Think about the task"};
+      var STEPS = [
+        { id: "Pikirkan Tugasnya", zh: "想任务" },
+        { id: "Identifikasi Bahaya", zh: "危险识别" },
+        { id: "Analisa Resikonya", zh: "风险分析" },
+        { id: "Control Resikonya", zh: "控制风险" },
+        { id: "Kerja Selamat", zh: "安全工作" }
+      ];
+      var FRONT = [
+        { id: "Apakah saya memiliki daftar langkah-langkah aktivitas dan memahami cara mengerjakannya?", zh: "我是否有工作步骤清单且知道如何执行他们?" },
+        { id: "Sudahkah saya membaca analisis risiko dan tindakan pencegahan yang akan diterapkan?", zh: "我是否阅读过风险分析和要落实的预防措施?" },
+        { id: "Apakah saya terlatih dan berwenang untuk melakukan pekerjaan tersebut?", zh: "我是否接受过培训, 并被授权执行这项工作?" },
+        { id: "Apakah saya sehat untuk melakukan pekerjaan? Tidak kelelahan, cedera, mengalami dehidrasi atau sedang mengonsumsi obat-obatan?", zh: "我的身体是否适合这项工作? 是否疲劳、受伤、脱水或服用任何药物?" },
+        { id: "Apakah saya memiliki semua APD yang diperlukan dan dalam kondisi baik?", zh: "我是否有所需的 PPE 且状况良好?" },
+        { id: "Apakah saya memiliki peralatan dan perlengkapan yang tepat, apakah peralatan dan perlengkapan tersebut memiliki label, telah diuji, dan dalam kondisi yang baik?", zh: "我是否有正确的工具和设备, 他们都被标记、测试且处于良好状况?" },
+        { id: "Apakah saya telah melakukan pengecekan dan pemeriksaan harian (P2H)?", zh: "我是否已完成所有启动前检查?" },
+        { id: "Apakah barikade dan papan informasi/petunjuk diperlukan untuk pekerjaan ini? Jika iya, apakah papan petunjuk dan barikade yang diperlukan untuk pekerjaan ini sudah terpasang dengan benar dan mudah dibaca?", zh: "这项工作是否需要障碍物和标识? 如需, 正确的标识和所需的障碍物是否到位?" },
+        { id: "Apakah semua isolasi energi (listrik, mekanik, servis) telah selesai dan telah dipastikan mati? Apakah saya memiliki kunci/tag personal (LOTO) yang siap digunakan untuk pekerjaan ini?", zh: "是否所有能量 (电气、机械、检修) 都已隔断且进行测试? 我是否准备好此项工作使用的个人挂锁/标签?" },
+        { id: "Apakah lingkungan kerja saya dalam kondisi yang bersih dan terawat sebelum saya mulai bekerja? (Housekeeping)", zh: "开始工作前, 我是否保持工作环境的整洁 (内务)?" }
+      ];
+      var HAZ = [
+        { id: "Bahan Berbahaya dan beracun", zh: "危险物质" },
+        { id: "Kelelahan", zh: "疲劳" },
+        { id: "Bahaya tersangkut kabel listrik", zh: "架空电线" },
+        { id: "Energi yang Tersimpan", zh: "储存能源" },
+        { id: "Pekerjaan Panas", zh: "动火作业" },
+        { id: "Kelistrikan", zh: "电气" },
+        { id: "Sirkulasi Udara", zh: "通风" },
+        { id: "Lingkungan/Tumpahan", zh: "环境/泄露" },
+        { id: "Mudah meledak/Gagal meledak", zh: "爆炸品/失火" },
+        { id: "Pengangkatan Manual", zh: "人工搬运" },
+        { id: "Alat bergerak/Pelindung mesin", zh: "活动部件/机械防护" },
+        { id: "Arus lalu lintas dan Pejalan kaki", zh: "车流量与行人" },
+        { id: "Kondisi Cuaca", zh: "天气条件" },
+        { id: "Bahaya Terjepit", zh: "挤压点" },
+        { id: "Lereng yang tinggi", zh: "高墙" },
+        { id: "Komunikasi", zh: "沟通" },
+        { id: "Kejatuhan/Benda jatuh", zh: "高空坠物" },
+        { id: "Debu/Kebisingan", zh: "灰尘/噪音" },
+        { id: "Kendaraan/Unit yang bergerak", zh: "车辆/移动设备" },
+        { id: "Ruang Terbatas", zh: "受限空间" },
+        { id: "Kegiatan bersama", zh: "协调作业" },
+        { id: "Kondisi tanah", zh: "土壤条件" },
+        { id: "Bekerja diketinggian", zh: "高空作业" },
+        { id: "Tergelincir/Tersandung", zh: "滑倒/绊倒" }
+      ];
+      var RISK = [
+        { id: "Apakah saya berada di \"area berbahaya\"?", zh: "我是否位于\"火线\"?", short: "Area berbahaya (line of fire)" },
+        { id: "Apakah risiko sudah terkontrol?", zh: "风险是否得到控制?", short: "Risiko terkontrol" },
+        { id: "Apakah ada risiko lain?", zh: "是否有其他风险?", short: "Risiko lain" }
+      ];
+      var UI = {
+        id: {
+          sub: "Take 5 menit untuk keselamatanmu — pikirkan tugasnya sebelum mulai.",
+          dataTitle: "Data", fNama: "Nama", fLokasi: "Lokasi", fPekerjaan: "Deskripsi Pekerjaan", fWaktu: "Tanggal / Jam",
+          frontTitle: "Apakah saya siap melakukan pekerjaan saya?",
+          frontHint: "Jawab setiap pertanyaan: Ya, Tidak, atau N/A (tidak berlaku).",
+          ruleGreen: "Semua hijau (All Green) — lanjutkan analisa di bagian belakang.",
+          ruleRed: "Jika ada merah (Any Red) — bicaralah dengan Supervisor/Manajer Anda.",
+          hazTitle: "Identifikasi Bahaya",
+          hazHint: "Sebelum memulai pekerjaan, tanyakan pada diri Anda: potensi bahaya apa yang Anda dan rekan kerja Anda hadapi? Centang semua yang ada.",
+          riskTitle: "Analisis Risiko",
+          actTitle: "Bahaya Lain & Tindakan Pencegahan",
+          actHint: "Diisi hanya jika kamu menjawab Ya pada \"Apakah ada risiko lain?\" — untuk potensi bahaya yang belum tercantum di daftar bahaya di atas.",
+          actOff: "Tabel ini aktif jika \"Apakah ada risiko lain?\" di bagian Analisis Risiko dijawab Ya.",
+          addRow: "+ Tambah bahaya lain", fCatatan: "Catatan (opsional)", kirim: "Generate",
+          dlTitle: "Hasil Form", download: "\u2b07 Download JPG", dlNote: "Form terisi (depan + belakang) dalam 1 file JPG. Unduh, lalu kirim file-nya ke grup / pengawas.", dlFail: "Gagal membuat gambar — periksa koneksi internet lalu coba lagi.",
+          ya: "Ya", tidak: "Tidak", na: "N/A",
+          phTindakan: "Tindakan pencegahan…", phNilai: "Nilai risiko", phBahayaLain: "Nama bahaya lain…",
+          frontRed: "Ada jawaban \"Tidak\" — bicaralah dengan Supervisor/Manajer Anda sebelum mulai bekerja.",
+          frontGreen: "Semua hijau — lanjutkan ke identifikasi bahaya.",
+          stGreen: "Status: SEMUA RISIKO TERKONTROL — kerja aman. Semua risiko terkontrol, saya bisa melakukan pekerjaan ini.",
+          stRed: "Status: ADA MERAH — ada jawaban \"Tidak\" pada kesiapan. Bicaralah dengan Supervisor/Manajer Anda.",
+          stStop: "Status: STOP — ada risiko yang belum terkontrol. Bicaralah dengan manajer Anda.",
+          errNama: "Isi Nama dulu ya.", errLokasi: "Isi Lokasi dulu ya.", errPekerjaan: "Isi Deskripsi Pekerjaan dulu ya.",
+          errFront: "Masih ada pertanyaan kesiapan yang belum dijawab.", errRisk: "Masih ada analisis risiko yang belum dijawab.",
+          errLain: "Kamu menjawab ada risiko lain — isi dulu bahaya lainnya dan tindakan pencegahannya di tabel."
+        },
+        zh: {
+          sub: "花5分钟为你的安全 — 开始前先想想任务。",
+          dataTitle: "数据", fNama: "名字", fLokasi: "地点", fPekerjaan: "工作描述", fWaktu: "日期 / 时间",
+          frontTitle: "我是否准备好开展工作?",
+          frontHint: "每个问题请选择: 是、否、或不适用。",
+          ruleGreen: "都为绿色 — 继续背面的分析。",
+          ruleRed: "如有红色 — 告知你的主管/经理。",
+          hazTitle: "危险识别",
+          hazHint: "在开始工作前, 问问自己: 你和你的同事将面临哪些潜在危险? 勾选所有存在的危险。",
+          riskTitle: "风险分析",
+          actTitle: "其他危险与预防措施",
+          actHint: "仅当你在\"是否有其他风险?\"回答\"是\"时填写 — 针对上面危险清单未列出的潜在危险。",
+          actOff: "当风险分析中\"是否有其他风险?\"回答\"是\"时, 此表激活。",
+          addRow: "+ 添加其他危险", fCatatan: "备注 (可选)", kirim: "生成",
+          dlTitle: "表格结果", download: "\u2b07 下载 JPG", dlNote: "已填好的表格(正反两面)合并为 1 个 JPG 文件。下载后把文件发到群组 / 主管。", dlFail: "生成图片失败 — 请检查网络后重试。",
+          ya: "是", tidak: "否", na: "不适用",
+          phTindakan: "预防措施…", phNilai: "风险评分", phBahayaLain: "其他危险名称…",
+          frontRed: "有\"否\"的回答 — 开始工作前请告知你的主管/经理。",
+          frontGreen: "都为绿色 — 继续进行危险识别。",
+          stGreen: "状态: 所有风险已受控 — 安全工作。",
+          stRed: "状态: 有红色 — 准备问题中有\"否\"。请告知你的主管/经理。",
+          stStop: "状态: 停止 — 有风险尚未受控。请告知你的经理。",
+          errNama: "请先填写名字。", errLokasi: "请先填写地点。", errPekerjaan: "请先填写工作描述。",
+          errFront: "还有准备问题未回答。", errRisk: "还有风险分析未回答。",
+          errLain: "你回答有其他风险 — 请先在表格中填写其他危险和预防措施。"
+        }
+      };
+      var lang = "id";
+      var frontAns = {};   // idx -> "Ya"|"Tidak"|"N/A"
+      var riskAns = {};    // idx -> "Ya"|"Tidak"
+      var checked = {};    // hazard idx -> true
+      var manualRows = 0;
+
+      function t(key) { return UI[lang][key]; }
+      function txt(item) { return lang === "zh" ? item.zh : item.id; }
+
+      function segHTML(kind, idx, opts) {
+        var h = '<div class="seg" data-kind="' + kind + '" data-idx="' + idx + '">';
+        opts.forEach(function (o) {
+          h += '<button type="button" data-val="' + o + '">' + t(o === "Ya" ? "ya" : o === "Tidak" ? "tidak" : "na") + "</button>";
+        });
+        return h + "</div>";
+      }
+      function render() {
+        document.getElementById("steps").innerHTML = STEPS.map(function (s, i) {
+          return "<span><b>" + (i + 1) + "</b>" + txt(s) + "</span>";
+        }).join("");
+        document.getElementById("front").innerHTML = FRONT.map(function (q, i) {
+          return '<div class="q"><p class="qt"><b>' + (i + 1) + '.</b>' + txt(q) + "</p>" + segHTML("front", i, ["Ya", "Tidak", "N/A"]) + "</div>";
+        }).join("");
+        document.getElementById("risk").innerHTML = RISK.map(function (q, i) {
+          return '<div class="q"><p class="qt"><b>' + (i + 1) + '.</b>' + txt(q) + "</p>" + segHTML("risk", i, ["Ya", "Tidak"]) + "</div>";
+        }).join("");
+        document.getElementById("haz").innerHTML = HAZ.map(function (hz, i) {
+          return '<label data-haz="' + i + '"><input type="checkbox" data-haz="' + i + '" /> <span>' + txt(hz) + "</span></label>";
+        }).join("");
+        document.querySelectorAll("[data-i]").forEach(function (el) {
+          el.textContent = t(el.getAttribute("data-i"));
+        });
+        rebind();
+        restoreState();
+        updateBanners();
+      }
+      function rebind() {
+        document.querySelectorAll(".seg button").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var seg = btn.parentElement, kind = seg.getAttribute("data-kind"), idx = seg.getAttribute("data-idx"), val = btn.getAttribute("data-val");
+            if (kind === "front") frontAns[idx] = val; else riskAns[idx] = val;
+            paintSeg(seg, val);
+            if (kind === "risk") syncActions();
+            updateBanners();
+          });
+        });
+        document.querySelectorAll(".haz input").forEach(function (cb) {
+          cb.addEventListener("change", function () {
+            var i = cb.getAttribute("data-haz");
+            checked[i] = cb.checked;
+            cb.closest("label").classList.toggle("on", cb.checked);
+            syncActions();
+            updateBanners();
+          });
+        });
+      }
+      function paintSeg(seg, val) {
+        seg.querySelectorAll("button").forEach(function (b) {
+          b.className = "";
+          if (b.getAttribute("data-val") === val) {
+            b.className = val === "Ya" ? "sel-ya" : val === "Tidak" ? "sel-tidak" : "sel-na";
+          }
+        });
+      }
+      function restoreState() {
+        document.querySelectorAll('.seg[data-kind="front"]').forEach(function (seg) {
+          var v = frontAns[seg.getAttribute("data-idx")]; if (v) paintSeg(seg, v);
+        });
+        document.querySelectorAll('.seg[data-kind="risk"]').forEach(function (seg) {
+          var v = riskAns[seg.getAttribute("data-idx")]; if (v) paintSeg(seg, v);
+        });
+        document.querySelectorAll(".haz input").forEach(function (cb) {
+          var on = !!checked[cb.getAttribute("data-haz")];
+          cb.checked = on; cb.closest("label").classList.toggle("on", on);
+        });
+        syncActions();
+      }
+      function actionRow(key, labelText, isManual) {
+        var div = document.createElement("div");
+        div.className = "trow"; div.setAttribute("data-row", key);
+        var head = isManual
+          ? '<input type="text" data-f="hazname" placeholder="' + t("phBahayaLain") + '" />'
+          : '<p class="th">' + labelText + "</p>";
+        div.innerHTML = head +
+          '<div class="grid"><input type="text" data-f="tindakan" placeholder="' + t("phTindakan") + '" />' +
+          '<input type="text" data-f="nilai" placeholder="' + t("phNilai") + '" /></div>';
+        return div;
+      }
+      var manualStash = {};
+      function syncActions() {
+        var box = document.getElementById("actions");
+        box.querySelectorAll(".trow").forEach(function (r) {
+          manualStash[r.getAttribute("data-row")] = {
+            hazname: (r.querySelector('[data-f="hazname"]') || {}).value || "",
+            tindakan: r.querySelector('[data-f="tindakan"]').value,
+            nilai: r.querySelector('[data-f="nilai"]').value
+          };
+        });
+        var addBtn = document.getElementById("addRow");
+        if (riskAns[2] !== "Ya") {
+          box.innerHTML = '<p class="hint">' + t("actOff") + "</p>";
+          addBtn.style.display = "none";
+          return;
+        }
+        addBtn.style.display = "";
+        if (manualRows === 0) manualRows = 1;
+        box.innerHTML = "";
+        for (var m = 0; m < manualRows; m++) box.appendChild(actionRow("man-" + m, "", true));
+        box.querySelectorAll(".trow").forEach(function (r) {
+          var k = manualStash[r.getAttribute("data-row")]; if (!k) return;
+          var hn = r.querySelector('[data-f="hazname"]'); if (hn) hn.value = k.hazname;
+          r.querySelector('[data-f="tindakan"]').value = k.tindakan;
+          r.querySelector('[data-f="nilai"]').value = k.nilai;
+        });
+      }
+      function statusInfo() {
+        var frontDone = FRONT.every(function (_, i) { return frontAns[i]; });
+        var frontRed = FRONT.some(function (_, i) { return frontAns[i] === "Tidak"; });
+        var riskDone = RISK.every(function (_, i) { return riskAns[i]; });
+        var uncontrolled = riskAns[1] === "Tidak";
+        return { frontDone: frontDone, frontRed: frontRed, riskDone: riskDone, uncontrolled: uncontrolled };
+      }
+      function updateBanners() {
+        var s = statusInfo();
+        var fb = document.getElementById("frontBanner");
+        if (s.frontDone) {
+          fb.className = "banner show " + (s.frontRed ? "bad" : "ok");
+          fb.textContent = s.frontRed ? t("frontRed") : t("frontGreen");
+        } else fb.className = "banner";
+        var fin = document.getElementById("finalBanner");
+        if (s.frontDone && s.riskDone) {
+          if (s.frontRed) { fin.className = "banner show bad"; fin.textContent = t("stRed"); }
+          else if (s.uncontrolled) { fin.className = "banner show bad"; fin.textContent = t("stStop"); }
+          else { fin.className = "banner show ok"; fin.textContent = t("stGreen"); }
+        } else fin.className = "banner";
+      }
+      function fmtWaktu(v) {
+        if (!v) return "-";
+        var d = new Date(v), bln = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        function p(n) { return (n < 10 ? "0" : "") + n; }
+        return d.getDate() + " " + bln[d.getMonth()] + " " + d.getFullYear() + ", " + p(d.getHours()) + "." + p(d.getMinutes());
+      }
+      function showErr(msg) {
+        var e = document.getElementById("err");
+        e.textContent = msg; e.style.display = msg ? "block" : "none";
+        if (msg) e.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      document.getElementById("addRow").addEventListener("click", function () { manualRows++; syncActions(); });
+      document.getElementById("kirim").addEventListener("click", function () {
+        var nama = document.getElementById("nama").value.trim();
+        var lokasi = document.getElementById("lokasi").value.trim();
+        var pekerjaan = document.getElementById("pekerjaan").value.trim();
+        var waktu = document.getElementById("waktu").value;
+        var catatan = document.getElementById("catatan").value.trim();
+        var s = statusInfo();
+        if (!nama) return showErr(t("errNama"));
+        if (!lokasi) return showErr(t("errLokasi"));
+        if (!pekerjaan) return showErr(t("errPekerjaan"));
+        if (!s.frontDone) return showErr(t("errFront"));
+        if (!s.riskDone) return showErr(t("errRisk"));
+        var rows = [];
+        if (riskAns[2] === "Ya") {
+          var complete = 0;
+          document.querySelectorAll("#actions .trow").forEach(function (r) {
+            var name = r.querySelector('[data-f="hazname"]').value.trim();
+            var tindakan = r.querySelector('[data-f="tindakan"]').value.trim();
+            var nilai = r.querySelector('[data-f="nilai"]').value.trim();
+            if (!name && !tindakan && !nilai) return;
+            if (name && tindakan) complete++;
+            rows.push({ name: name || "-", tindakan: tindakan, nilai: nilai });
+          });
+          if (complete === 0 || rows.some(function (r) { return !r.tindakan || r.name === "-"; })) return showErr(t("errLain"));
+        }
+        showErr("");
+        var lines = [];
+        lines.push("TAKE 5");
+        lines.push("Nama: " + nama);
+        lines.push("Lokasi: " + lokasi);
+        lines.push("Pekerjaan: " + pekerjaan);
+        lines.push("Waktu: " + fmtWaktu(waktu));
+        var reds = FRONT.filter(function (_, i) { return frontAns[i] === "Tidak"; });
+        if (reds.length === 0) {
+          lines.push("Kesiapan: Semua hijau (tidak ada jawaban Tidak)");
+        } else {
+          lines.push("Kesiapan — jawaban Tidak:");
+          FRONT.forEach(function (q, i) { if (frontAns[i] === "Tidak") lines.push("- " + (i + 1) + ". " + q.id); });
+        }
+        var hazNames = HAZ.filter(function (_, i) { return checked[i]; }).map(function (hz) { return hz.id; });
+        lines.push("Bahaya: " + (hazNames.length ? hazNames.join("; ") : "Tidak ada yang dicentang"));
+        lines.push("Analisis risiko:");
+        RISK.forEach(function (q, i) { lines.push("- " + q.short + ": " + riskAns[i]); });
+        if (rows.length) {
+          lines.push("Bahaya lain:");
+          rows.forEach(function (r) {
+            lines.push("- " + r.name + ": " + r.tindakan + (r.nilai ? " (Nilai risiko: " + r.nilai + ")" : ""));
+          });
+        }
+        var kodeF = FRONT.map(function (_, i) { return frontAns[i] === "Ya" ? "Y" : frontAns[i] === "Tidak" ? "T" : "N"; }).join("");
+        lines.push("Kode kesiapan: " + kodeF);
+        var kodeR = RISK.map(function (_, i) { return riskAns[i] === "Ya" ? "Y" : "T"; }).join("");
+        lines.push("Kode risiko: " + kodeR);
+        var status = s.frontRed
+          ? "ADA MERAH — bicaralah dengan Supervisor/Manajer"
+          : s.uncontrolled
+            ? "STOP — ada risiko belum terkontrol, bicaralah dengan manajer"
+            : "SEMUA HIJAU — semua risiko terkontrol, kerja aman";
+        lines.push("Status: " + status);
+        if (catatan) lines.push("Catatan: " + catatan);
+        var data = { nama: nama, lokasi: lokasi, pekerjaan: pekerjaan, waktu: fmtWaktu(waktu), rows: rows, catatan: catatan, status: status };
+        buildSheet(data);
+        showErr("");
+        var rp = document.getElementById("resultPanel");
+        rp.style.display = "block";
+        document.getElementById("dlBtn").textContent = t("download");
+        document.getElementById("dlNote").textContent = t("dlNote");
+        rp.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+      function buildSheet(d) {
+        var S = SHEET;
+        var h = "";
+        h += '<p class="s-title">\u25b8 Take 5 \u2013 Take 5 minutes for your Safety \u2013 <span class="lt">Think about the task</span></p><div class="s-bar"></div>';
+        h += '<table class="s-steps"><tr>' + S.steps.map(function (s) {
+          return "<td><b>" + s.no + "." + esc(s.id) + '</b><br/><span class="zh">' + esc(s.zh) + '</span><br/><span class="s-en">' + esc(s.en) + "</span></td>";
+        }).join("") + "</tr></table>";
+        h += '<div class="s-frow"><span class="s-flab">Name <span class="zh">\u59d3\u540d:</span></span><span class="s-fline" style="flex:5">' + esc(d.nama) + '</span><span class="s-flab">Date/Time <span class="zh">\u65e5\u671f/\u65f6\u95f4:</span></span><span class="s-fline" style="flex:3.4">' + esc(d.waktu) + "</span></div>";
+        h += '<div class="s-frow"><span class="s-flab">Location <span class="zh">\u5730\u70b9:</span></span><span class="s-fline">' + esc(d.lokasi) + "</span></div>";
+        h += '<div class="s-frow"><span class="s-flab">Deskripsi Pekerjaan <span class="zh">\u5de5\u4f5c\u63cf\u8ff0:</span></span><span class="s-fline">' + esc(d.pekerjaan) + "</span></div>";
+        h += '<div class="s-frow"><span class="s-fline"></span></div>';
+        // front questions
+        var marks = { "Ya": '<span class="y">\u2713</span>', "Tidak": '<span class="t">\u2713</span>', "N/A": '<span class="n">\u2713</span>' };
+        h += '<table class="s-q"><tr><th class="hd">' + esc(S.frontSection.id) + " " + esc(S.frontSection.zh) + '<br/><span class="s-en" style="color:#ccc">' + esc(S.frontSection.en) + '</span></th><th class="ah">Ya<br/>\u662f</th><th class="ah">Tidak<br/>\u5426</th><th class="ah">N/A<br/>\u4e0d\u9002\u7528</th></tr>';
+        S.front.forEach(function (q, i) {
+          var a = frontAns[i];
+          h += "<tr><td>" + esc(q.id) + " " + esc(q.zh) + '<br/><span class="s-en">' + esc(q.en) + "</span></td>";
+          ["Ya", "Tidak", "N/A"].forEach(function (o) {
+            h += '<td class="ac">' + (a === o ? marks[o] : "") + "</td>";
+          });
+          h += "</tr>";
+        });
+        S.frontRules.forEach(function (r) { h += '<tr class="rule"><td colspan="4">' + esc(r) + "</td></tr>"; });
+        h += "</table>";
+        // back page
+        h += '<div class="s-page2">';
+        h += '<div class="s-band">' + esc(S.backHeader.id) + " " + esc(S.backHeader.zh) + '<br/><span class="s-en" style="color:#ccc">' + esc(S.backHeader.en) + "</span></div>";
+        h += '<table class="s-haz">';
+        for (var r = 0; r < 8; r++) {
+          h += "<tr>";
+          for (var c = 0; c < 3; c++) {
+            var hz = S.hazards[c * 8 + r], on = !!checked[c * 8 + r];
+            h += '<td class="' + (on ? "hl" : "") + '">' + (on ? "\u2713 " : "\u2610 ") + esc(hz.id) + " " + esc(hz.zh) + '<br/><span class="s-en">' + esc(hz.en) + "</span></td>";
+          }
+          h += "</tr>";
+        }
+        h += "</table>";
+        h += '<table class="s-q"><tr><th class="hd">' + esc(S.riskSection.id) + " " + esc(S.riskSection.zh) + '<br/><span class="s-en" style="color:#ccc">' + esc(S.riskSection.en) + '</span></th><th class="ah">Ya<br/>\u662f</th><th class="ah">Tidak<br/>\u5426</th></tr>';
+        S.risk.forEach(function (q, i) {
+          var a = riskAns[i];
+          h += "<tr><td>" + esc(q.id) + " " + esc(q.zh) + '<br/><span class="s-en">' + esc(q.en) + "</span></td>";
+          ["Ya", "Tidak"].forEach(function (o) {
+            h += '<td class="ac">' + (a === o ? marks[o] : "") + "</td>";
+          });
+          h += "</tr>";
+        });
+        h += "</table>";
+        var green = d.status.indexOf("SEMUA HIJAU") === 0;
+        h += '<div style="display:flex; gap:10px; margin-top:12px">';
+        S.decision.forEach(function (b) {
+          var isSafe = b.type === "Work Safely", chosen = isSafe === green;
+          h += '<div class="s-dbox' + (chosen ? " chosen" : "") + '">' + (chosen ? '<span class="bdg">\u2713</span>' : "") + '<span class="dt">' + esc(b.type) + "</span><br/>" + esc(b.en) + "</div>";
+        });
+        h += "</div>";
+        h += '<table class="s-free"><colgroup><col style="width:30%"/><col style="width:47%"/><col style="width:23%"/></colgroup><tr>' +
+          S.freeCols.map(function (c) { return "<th>" + esc(c.id) + " " + esc(c.zh) + "<br/>" + esc(c.en) + "</th>"; }).join("") + "</tr>";
+        var total = Math.max(5, d.rows.length);
+        for (var k = 0; k < total; k++) {
+          var row = d.rows[k];
+          h += "<tr><td>" + (row ? esc(row.name) : "") + "</td><td>" + (row ? esc(row.tindakan) : "") + "</td><td>" + (row ? esc(row.nilai) : "") + "</td></tr>";
+        }
+        h += "</table>";
+        if (d.catatan) h += '<p class="s-cat">Catatan: ' + esc(d.catatan) + "</p>";
+        h += "</div>";
+        document.getElementById("sheet").innerHTML = h;
+      }
+      document.getElementById("dlBtn").addEventListener("click", function () {
+        if (!window.html2canvas) { showErr(t("dlFail")); return; }
+        showErr("");
+        html2canvas(document.getElementById("sheet"), { scale: 2, backgroundColor: "#ffffff" }).then(function (canvas) {
+          canvas.toBlob(function (blob) {
+            if (!blob) { showErr(t("dlFail")); return; }
+            var nm = (document.getElementById("nama").value.trim() || "take5").replace(/[^\w]+/g, "-").toLowerCase();
+            var now = new Date(); function p(n) { return (n < 10 ? "0" : "") + n; }
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "take5-" + nm + "-" + now.getFullYear() + p(now.getMonth() + 1) + p(now.getDate()) + "-" + p(now.getHours()) + p(now.getMinutes()) + ".jpg";
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+          }, "image/jpeg", 0.92);
+        }).catch(function () { showErr(t("dlFail")); });
+      });
+      function setLang(l) {
+        lang = l;
+        try { localStorage.setItem("take5-lang", l); } catch (e) {}
+        document.getElementById("lang-id").classList.toggle("on", l === "id");
+        document.getElementById("lang-zh").classList.toggle("on", l === "zh");
+        render();
+      }
+      document.getElementById("lang-id").addEventListener("click", function () { setLang("id"); });
+      document.getElementById("lang-zh").addEventListener("click", function () { setLang("zh"); });
+      // init: prefill nama dari URL, waktu = sekarang, bahasa tersimpan
+      (function init() {
+        var q = new URLSearchParams(window.location.search);
+        if (q.get("nama")) document.getElementById("nama").value = q.get("nama");
+        if (q.get("lokasi")) document.getElementById("lokasi").value = q.get("lokasi");
+        var now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById("waktu").value = now.toISOString().slice(0, 16);
+        var saved = "id";
+        try { saved = localStorage.getItem("take5-lang") || "id"; } catch (e) {}
+        setLang(saved === "zh" ? "zh" : "id");
+      })();
+    </script>
+    <div id="sheetWrap"><div id="sheet"></div></div>
+  </body>
+</html>
