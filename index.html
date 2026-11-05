@@ -128,6 +128,8 @@
       #sheet .s-q .ac { width: 46px; text-align: center; background: #f4f4f4; font-size: 15px; font-weight: 700; }
       #sheet .s-q .ac .y { color: #157347; } #sheet .s-q .ac .t { color: #c22424; } #sheet .s-q .ac .n { color: #666; }
       #sheet .s-q .rule td { background: #fafafa; font-size: 11.5px; }
+      #sheet .s-q th.col-y, #sheet .s-q td.col-y { background: #e3f2e8; }
+      #sheet .s-q th.col-t, #sheet .s-q td.col-t { background: #fbe9e7; }
       #sheet .s-band { background: #f5b301; color: #191d20; padding: 6px 9px; font-size: 12.5px; margin-top: 12px; }
       #sheet table.s-haz { width: 100%; border-collapse: collapse; }
       #sheet .s-haz td { border: 0.8px solid #555; width: 33.33%; padding: 4px 6px; vertical-align: top; font-size: 12px; }
@@ -560,12 +562,12 @@
         h += '<div class="s-frow"><span class="s-fline"></span></div>';
         // front questions
         var marks = { "Ya": '<span class="y">\u2713</span>', "Tidak": '<span class="t">\u2713</span>', "N/A": '<span class="n">\u2713</span>' };
-        h += '<table class="s-q"><tr><th class="hd">' + esc(S.frontSection.id) + " " + esc(S.frontSection.zh) + '<br/><span class="s-en" style="color:#7a5c06">' + esc(S.frontSection.en) + '</span></th><th class="ah">Ya<br/>\u662f</th><th class="ah">Tidak<br/>\u5426</th><th class="ah">N/A<br/>\u4e0d\u9002\u7528</th></tr>';
+        h += '<table class="s-q"><tr><th class="hd">' + esc(S.frontSection.id) + " " + esc(S.frontSection.zh) + '<br/><span class="s-en" style="color:#7a5c06">' + esc(S.frontSection.en) + '</span></th><th class="ah col-y">Ya<br/>\u662f</th><th class="ah col-t">Tidak<br/>\u5426</th><th class="ah">N/A<br/>\u4e0d\u9002\u7528</th></tr>';
         S.front.forEach(function (q, i) {
           var a = frontAns[i];
           h += "<tr><td>" + esc(q.id) + " " + esc(q.zh) + '<br/><span class="s-en">' + esc(q.en) + "</span></td>";
           ["Ya", "Tidak", "N/A"].forEach(function (o) {
-            h += '<td class="ac">' + (a === o ? marks[o] : "") + "</td>";
+            h += '<td class="ac ' + (o === "Ya" ? "col-y" : o === "Tidak" ? "col-t" : "") + '">' + (a === o ? marks[o] : "") + "</td>";
           });
           h += "</tr>";
         });
@@ -584,12 +586,12 @@
           h += "</tr>";
         }
         h += "</table>";
-        h += '<table class="s-q"><tr><th class="hd">' + esc(S.riskSection.id) + " " + esc(S.riskSection.zh) + '<br/><span class="s-en" style="color:#7a5c06">' + esc(S.riskSection.en) + '</span></th><th class="ah">Ya<br/>\u662f</th><th class="ah">Tidak<br/>\u5426</th></tr>';
+        h += '<table class="s-q"><tr><th class="hd">' + esc(S.riskSection.id) + " " + esc(S.riskSection.zh) + '<br/><span class="s-en" style="color:#7a5c06">' + esc(S.riskSection.en) + '</span></th><th class="ah col-y">Ya<br/>\u662f</th><th class="ah col-t">Tidak<br/>\u5426</th></tr>';
         S.risk.forEach(function (q, i) {
           var a = riskAns[i];
           h += "<tr><td>" + esc(q.id) + " " + esc(q.zh) + '<br/><span class="s-en">' + esc(q.en) + "</span></td>";
           ["Ya", "Tidak"].forEach(function (o) {
-            h += '<td class="ac">' + (a === o ? marks[o] : "") + "</td>";
+            h += '<td class="ac ' + (o === "Ya" ? "col-y" : o === "Tidak" ? "col-t" : "") + '">' + (a === o ? marks[o] : "") + "</td>";
           });
           h += "</tr>";
         });
